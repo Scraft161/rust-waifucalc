@@ -123,7 +123,11 @@ fn price_calc_multiple(min_value: i32, max_value: i32, buy_markup: f64, sell_mar
 		let buy_price: f64 = i_float * buy_markup + i_float;
 		let sell_price: f64 = i_float * sell_markup + i_float;
 
-		println!("| {:^5} | {:^5} | {:^5} |", i, buy_price, sell_price);
+        // Convert Floats back to integers
+        let buy_price_int: i32 = buy_price.round() as i32;
+        let sell_price_int: i32 = sell_price.round() as i32;
+
+		println!("| {:^5} | {:^5} | {:^5} |", i, buy_price_int, sell_price_int);
 	}
 }
 
@@ -135,6 +139,27 @@ Usage:
 	waifucalc card-value
 	waifucalc min-value max-value
 	waifucalc min-value max-value buy-markup sell-markup
+
+Interactive Mode Usage:
+    card-value: calculate buy and sell prices
+    min-value-max-value: calculate prices with range
+
+    Examples:
+        []> 17
+        | Card  |  Buy  | Sell  |
+        |-------|-------|-------|
+        |  17   |  19   |  20   |
+
+        []> 15-17
+        | Card  |  Buy  | Sell  |
+        |-------|-------|-------|
+        |  15   |  17   |  18   |
+        |  16   |  18   |  19   |
+        |  17   |  19   |  20   |
+
+Interactive Mode commands:
+    `e` to exit
+    `h` for this text
 
 Defaults:
 	min-value: {}
