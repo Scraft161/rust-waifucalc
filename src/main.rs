@@ -54,10 +54,15 @@ Interactive commands are:
 	    	.read_line(&mut interactive_command)
 	    	.expect("[ERR]: Failed to read input.");
 
+        // Deal with OS-specific behavior where we sometimes get a newline
+        if interactive_command.ends_with("\n") {
+            interactive_command = interactive_command.strip_suffix("\n").unwrap().to_string();
+        }
+
         // Parse user commands
         match interactive_command.as_str() {
-            "h\n" => help(min_price, max_price, buy_markup, sell_markup),
-            "e\n" => exit(0),
+            "h" => help(min_price, max_price, buy_markup, sell_markup),
+            "e" => exit(0),
             _ => {
                 let command_as_number: i32 = match interactive_command.trim().parse() {
                     Ok(num) => num,
