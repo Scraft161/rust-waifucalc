@@ -3,6 +3,7 @@ use std::{
     process::exit,
     io::{self, Write}
 };
+use regex::Regex;
 
 fn main() {
 	// Set defaults (hardcoded)
@@ -36,7 +37,9 @@ fn main() {
 fn interactive_mode(min_price: i32, max_price: i32, buy_markup: f64, sell_markup: f64) {
 	let interactive_command_help = "h";
 	let interactive_command_exit = "e";
-	//a
+    let range_separator = "-";
+    let re_range = Regex::new(r"\d+-\d+").unwrap();
+
 	println!("Interactive Mode, enter a digit, a range, or an interacive command.
 Interactive commands are:
 {}: help
@@ -64,14 +67,32 @@ Interactive commands are:
             "h" => help(min_price, max_price, buy_markup, sell_markup),
             "e" => exit(0),
             _ => {
-                let command_as_number: i32 = match interactive_command.trim().parse() {
-                    Ok(num) => num,
-                    Err(_) => {
-                        println!("[ERR]: Input is not a known command or number");
-                        continue;
-                    }
-                };
-                price_calc(command_as_number, buy_markup, sell_markup);
+                if re_range.is_match(&interactive_command) {
+                    // Parse range
+                    println!("[DBG]: Found range: {interactive_command}");
+
+                    let (range_start, range_end) = interactive_command
+                        .trim()
+                        .split_once(range_separator)
+                        .unwrap();
+
+                    let range_start: i32 = range_start.parse().unwrap();
+                    let range_end: i32 = range_end.parse().unwrap();
+
+                    price_calc_multiple(range_start, range_end, buy_markup, sell_markup);
+                } else {
+
+                    let command_as_number: i32 = match interactive_command.trim().parse() {
+                        Ok(num) => num,
+                        Err(_) => {
+                            println!("[ERR]: Input is not a known command or number");
+                            continue;    
+                        }
+                    };
+
+                    price_calc(command_as_number, buy_markup, sell_markup);
+
+                }
             }
         }
     }
