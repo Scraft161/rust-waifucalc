@@ -16,14 +16,6 @@ fn main() {
 	// check if arguments are given
 	let args: Vec<String> = env::args().collect();
 
-	/*if args.len() == 2 && args[1].starts_with("-") {
-		match args[1] {
-			"-h" => help(min_price, max_price, buy_markup, sell_markup),
-			"-i" => todo!(),
-			_ => (),
-		}
-	}*/
-
 	match args.len() {
 		1 => interactive_mode(min_price, max_price, buy_markup, sell_markup), // Enter interactive mode
 		2 => price_calc(args[1].parse::<i32>().unwrap(), buy_markup, sell_markup), // Only use card-value
